@@ -1,0 +1,66 @@
+#include "ver_coches.h"
+#include <string.h>
+static void volver(GtkButton *button, GtkWidget *ventana)
+{
+
+
+	gtk_widget_destroy(ventana);
+}
+
+
+
+
+int ver_coches(struct concesionario *con)
+{
+    GtkWidget *ventana;
+    GtkWidget *hbox;
+    GtkWidget *vbox;
+    GtkWidget *boton_volver;
+    GtkWidget *label_lista;
+    
+    ventana=gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    hbox=gtk_hbox_new(TRUE,5);
+    vbox=gtk_vbox_new(TRUE,5);
+    boton_volver=gtk_button_new_with_label("Volver");
+    label_lista=gtk_label_new("Lista coches");
+    
+    gtk_window_set_title((GtkWindow *) ventana, "Listado de coches");
+    
+    struct coche *c,*tmp;
+    printf("el dueño nuevo es: %s\n",curso_concesionario_attr_get_str(con,CURSO_CONCESIONARIO_ATTR_DUENO));    
+    int i=0;
+    for(i=0;i<curso_concesionario_attr_get_u32(con,CURSO_CONCESIONARIO_ATTR_NUM_COCHES);i++){
+	    c=curso_concesionario_attr_get_coche(con,CURSO_CONCESIONARIO_ATTR_COCHE,i);
+        GtkWidget *cbox;
+	
+        cbox=gtk_hbox_new(TRUE,5);
+         const char *matricula=curso_coche_attr_get_str(c,CURSO_COCHE_ATTR_MATRICULA);
+         const char *marca=  curso_coche_attr_get_str(c,CURSO_COCHE_ATTR_MARCA);
+         
+	GtkWidget *label_marca;
+        GtkWidget *label_matricula;
+        GtkWidget *label_gama;
+	
+        label_marca=gtk_label_new(matricula);
+        label_matricula=gtk_label_new(marca);
+      
+	gtk_box_pack_start((GtkBox *) cbox, label_marca,TRUE, TRUE, 0);
+	gtk_box_pack_start((GtkBox *) cbox, label_matricula,TRUE, TRUE, 0);
+     
+	gtk_box_pack_start((GtkBox *) vbox, cbox, TRUE, TRUE, 0); 
+     
+    }
+  
+    	GtkWidget *button;
+	button=gtk_button_new_with_label("volver");
+	gtk_box_pack_start((GtkBox *) vbox, button, TRUE, TRUE, 0);
+	
+
+	g_signal_connect((GObject *) button, "clicked",(GCallBack) volver, (GObject *) ventana));
+    	gtk_container_add((GtkContainer *) ventana, vbox);
+ 	
+    gtk_widget_show_all(ventana);
+    return 0;
+
+}
+        
